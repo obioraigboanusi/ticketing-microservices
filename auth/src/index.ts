@@ -6,6 +6,7 @@ import { signupRouter } from './routes/signup.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { NotFoundError } from './errors/not-found-error.js';
 import mongoose from 'mongoose';
+import 'express-async-errors';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
