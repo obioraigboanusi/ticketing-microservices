@@ -1,0 +1,19 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+    useBuildkit: true
+  artifacts:
+    - image: obiorai/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: "src/**/*.ts"
+            src: .
