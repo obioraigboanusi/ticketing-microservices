@@ -1,10 +1,10 @@
 import express, { type Request, type Response } from 'express';
-import { body, validationResult } from 'express-validator';
-import { RequestValidationError } from '../errors/request-validation-error.js';
+import { body } from 'express-validator';
 import { User } from '../models/user.model.js';
 import { BadRequestError } from '../errors/bad-request-error.js';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
+import { validateRequest } from '../middleware/validate-request.js';
 
 const router = express.Router();
 
@@ -16,39 +16,38 @@ const loginValidation = [
     .withMessage('Password must be between 4 and 20 characters'),
 ];
 
-router.post('/api/users/signup', loginValidation, async (req: Request, res: Response) => {
-  const errors = validationResult(req);
+router.post(
+  '/api/users/signup',
+  loginValidation,
+  validateRequest,
+  async (req: Request, res: Response) => {
+    const { email, password } = req.body;
 
-  if (!errors.isEmpty()) {
-    throw new RequestValidationError(errors.array());
-  }
+    const existingUser = await User.findOne({ email });
 
-  const { email, password } = req.body;
+    if (existingUser) {
+      throw new BadRequestError('Email in use');
+    }
 
-  const existingUser = await User.findOne({ email });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  if (existingUser) {
-    throw new BadRequestError('Email in use');
-  }
+    const user = new User({ email, password: hashedPassword });
+    await user.save();
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+    const userJwt = jsonwebtoken.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      process.env.JWT_KEY!,
+    );
 
-  const user = new User({ email, password: hashedPassword });
-  await user.save();
+    req.session = {
+      jwt: userJwt,
+    };
 
-  const userJwt = jsonwebtoken.sign(
-    {
-      id: user.id,
-      email: user.email,
-    },
-    process.env.JWT_KEY!,
-  );
-
-  req.session = {
-    jwt: userJwt,
-  };
-
-  res.status(201).send(user);
-});
+    res.status(201).send(user);
+  },
+);
 
 export { router as signupRouter };
