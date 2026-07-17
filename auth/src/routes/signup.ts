@@ -4,6 +4,7 @@ import { RequestValidationError } from '../errors/request-validation-error.js';
 import { User } from '../models/user.model.js';
 import { BadRequestError } from '../errors/bad-request-error.js';
 import bcrypt from 'bcrypt';
+import jsonwebtoken from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -34,6 +35,18 @@ router.post('/api/users/signup', loginValidation, async (req: Request, res: Resp
 
   const user = new User({ email, password: hashedPassword });
   await user.save();
+
+  const userJwt = jsonwebtoken.sign(
+    {
+      id: user.id,
+      email: user.email,
+    },
+    process.env.JWT_KEY!,
+  );
+
+  req.session = {
+    jwt: userJwt,
+  };
 
   res.status(201).send(user);
 });
