@@ -1,5 +1,11 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
+import { app } from '../app.js';
+import request from 'supertest';
+
+declare global {
+  var signin: () => Promise<string[]>;
+}
 
 let mongod: MongoMemoryServer;
 
@@ -32,3 +38,21 @@ afterAll(async () => {
     console.log('Test db disconnected successfully');
   }
 });
+
+global.signin = async () => {
+  const signupResponse = await request(app)
+    .post('/api/users/signup')
+    .send({
+      email: 'test@test.com',
+      password: 'password',
+    })
+    .expect(201);
+
+  const cookie = signupResponse.get('Set-Cookie');
+
+  if (!cookie) {
+    throw new Error('Expected cookie but got undefined.');
+  }
+
+  return cookie;
+};
