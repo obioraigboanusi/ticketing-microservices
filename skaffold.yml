@@ -7,7 +7,7 @@ deploy:
 build:
   local:
     push: false
-    useBuildkit: true
+    useBuildkit: true 
   artifacts:
     - image: obiorai/auth
       context: auth
@@ -16,4 +16,16 @@ build:
       sync:
         manual:
           - dest: "src/**/*.ts"
-            src: .
+            src: "src/**/*.ts" 
+          - dest: "package*.json"
+            src: "package*.json"
+    - image: obiorai/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: "**/*.ts"
+            src: "src/**/*.ts"
+          - dest: "package*.json"
+            src: "package*.json"   
