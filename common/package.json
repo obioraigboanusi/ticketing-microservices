@@ -1,0 +1,33 @@
+{
+  "name": "@cwertlinks/common",
+  "version": "1.0.3",
+  "description": "common utilities for the ticketing project",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "clean": "del-cli build/**/*",
+    "build": "npm run clean && tsc",
+    "pub": "git add . && git commit -m \"$npm_config_message\" && npm version patch && npm run build && npm publish"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "del-cli": "^7.0.0",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@types/cookie-session": "^2.0.49",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "cookie-session": "^2.1.1",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.2",
+    "jsonwebtoken": "^9.0.3"
+  }
+}
