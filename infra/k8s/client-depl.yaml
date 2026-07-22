@@ -18,6 +18,9 @@ spec:
       - name: client
         image: obiorai/client
         imagePullPolicy: IfNotPresent
+        env:
+        - name: AUTH_INTERNAL_URL
+          value: 'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local'
         ports:
         - containerPort: 3000
 ---
