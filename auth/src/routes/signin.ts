@@ -1,9 +1,8 @@
 import express from 'express';
 import { body } from 'express-validator';
-import { validateRequest } from '../middleware/validate-request.js';
+import { validateRequest, BadRequestError } from '@cwertlinks/common';
 import type { Request, Response } from 'express';
 import { User } from '../models/user.model.js';
-import { BadRequestError } from '../errors/bad-request-error.js';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 

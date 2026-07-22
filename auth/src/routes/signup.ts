@@ -1,10 +1,9 @@
 import express, { type Request, type Response } from 'express';
 import { body } from 'express-validator';
 import { User } from '../models/user.model.js';
-import { BadRequestError } from '../errors/bad-request-error.js';
+import { BadRequestError, validateRequest } from '@cwertlinks/common';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
-import { validateRequest } from '../middleware/validate-request.js';
 
 const router = express.Router();
 

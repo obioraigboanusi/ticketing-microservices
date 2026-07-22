@@ -1,5 +1,5 @@
 import express from 'express';
-import { currentUser } from '../middleware/current-user.js';
+import { currentUser } from '@cwertlinks/common';
 
 const router = express.Router();
 
