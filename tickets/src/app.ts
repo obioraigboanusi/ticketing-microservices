@@ -1,6 +1,7 @@
 import express from 'express';
 import { errorHandler, NotFoundError } from '@cwertlinks/common';
 import cookieSession from 'cookie-session';
+import { createTicketRouter } from './routes/createTicketRouter.js';
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use(
     httpOnly: true,
   }),
 );
+
+app.use(createTicketRouter);
 
 app.all('/{*splat}', () => {
   throw new NotFoundError();

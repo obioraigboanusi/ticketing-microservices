@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
-    "types": ["node"]
+    "types": ["node", "jest"]
   },
   "include": ["src/**/*"]
 }
