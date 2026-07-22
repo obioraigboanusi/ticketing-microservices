@@ -7,4 +7,10 @@ describe('create ticket', () => {
 
     expect(response.status).not.toBe(404);
   });
+
+  it('can only be accessed if the user is signed in', async () => {
+    const response = await request(app).post('/api/tickets').send({});
+
+    expect(response.status).toBe(401);
+  });
 });

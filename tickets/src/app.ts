@@ -1,5 +1,5 @@
 import express from 'express';
-import { errorHandler, NotFoundError } from '@cwertlinks/common';
+import { currentUser, errorHandler, NotFoundError } from '@cwertlinks/common';
 import cookieSession from 'cookie-session';
 import { createTicketRouter } from './routes/createTicketRouter.js';
 
@@ -16,6 +16,8 @@ app.use(
     httpOnly: true,
   }),
 );
+
+app.use(currentUser);
 
 app.use(createTicketRouter);
 
