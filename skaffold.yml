@@ -19,6 +19,16 @@ build:
             src: "src/**/*.ts" 
           - dest: "package*.json"
             src: "package*.json"
+    - image: obiorai/tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: "src/**/*.ts"
+            src: "src/**/*.ts"
+          - dest: "package*.json"
+            src: "package*.json"
     - image: obiorai/client
       context: client
       docker:

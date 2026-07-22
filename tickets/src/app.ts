@@ -16,7 +16,6 @@ app.use(
   }),
 );
 
-
 app.all('/{*splat}', () => {
   throw new NotFoundError();
 });
