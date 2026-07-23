@@ -22,4 +22,42 @@ describe('create ticket', () => {
 
     expect(response.status).not.toBe(401);
   });
+
+  it('returns an error if an invalid title is provided', async () => {
+    await request(app)
+      .post('/api/tickets')
+      .set('Cookie', global.signin())
+      .send({
+        title: '',
+        price: 10,
+      })
+      .expect(400);
+
+    await request(app)
+      .post('/api/tickets')
+      .set('Cookie', global.signin())
+      .send({
+        price: 10,
+      })
+      .expect(400);
+  });
+
+  it('returns an error if an invalid price is provided', async () => {
+    await request(app)
+      .post('/api/tickets')
+      .set('Cookie', global.signin())
+      .send({
+        title: 'test',
+        price: -10,
+      })
+      .expect(400);
+
+    await request(app)
+      .post('/api/tickets')
+      .set('Cookie', global.signin())
+      .send({
+        title: 'test',
+      })
+      .expect(400);
+  });
 });
