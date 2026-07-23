@@ -1,31 +1,33 @@
 import request from 'supertest';
 import { app } from '../../app.js';
 import { Ticket } from '../../models/ticket.model.js';
-
-const endpoint = '/api/tickets';
+import { ticketsEndpoint } from '../../tests/endpoints.js';
 
 describe('create ticket', () => {
   it('has a route listening to /api/tickets for post requests', async () => {
-    const response = await request(app).post(endpoint).send({});
+    const response = await request(app).post(ticketsEndpoint).send({});
 
     expect(response.status).not.toBe(404);
   });
 
   it('can only be accessed if the user is signed in', async () => {
-    const response = await request(app).post(endpoint).send({});
+    const response = await request(app).post(ticketsEndpoint).send({});
 
     expect(response.status).toBe(401);
   });
 
   it('returns a status other than 401 if the user is signed in', async () => {
-    const response = await request(app).post(endpoint).set('Cookie', global.signin()).send({});
+    const response = await request(app)
+      .post(ticketsEndpoint)
+      .set('Cookie', global.signin())
+      .send({});
 
     expect(response.status).not.toBe(401);
   });
 
   it('returns an error if an invalid title is provided', async () => {
     await request(app)
-      .post(endpoint)
+      .post(ticketsEndpoint)
       .set('Cookie', global.signin())
       .send({
         title: '',
@@ -34,7 +36,7 @@ describe('create ticket', () => {
       .expect(400);
 
     await request(app)
-      .post(endpoint)
+      .post(ticketsEndpoint)
       .set('Cookie', global.signin())
       .send({
         price: 10,
@@ -44,7 +46,7 @@ describe('create ticket', () => {
 
   it('returns an error if an invalid price is provided', async () => {
     await request(app)
-      .post(endpoint)
+      .post(ticketsEndpoint)
       .set('Cookie', global.signin())
       .send({
         title: 'test',
@@ -53,7 +55,7 @@ describe('create ticket', () => {
       .expect(400);
 
     await request(app)
-      .post(endpoint)
+      .post(ticketsEndpoint)
       .set('Cookie', global.signin())
       .send({
         title: 'test',
@@ -70,7 +72,11 @@ describe('create ticket', () => {
       price: 10,
     };
 
-    await request(app).post(endpoint).set('Cookie', global.signin()).send(payload).expect(201);
+    await request(app)
+      .post(ticketsEndpoint)
+      .set('Cookie', global.signin())
+      .send(payload)
+      .expect(201);
 
     const ticket = await Ticket.find({});
     expect(ticket.length).toEqual(1);
