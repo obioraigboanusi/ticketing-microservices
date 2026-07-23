@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { app } from '../../app.js';
+import { Ticket } from '../../models/ticket.model.js';
 
 describe('create ticket', () => {
   it('has a route listening to /api/tickets for post requests', async () => {
@@ -59,5 +60,28 @@ describe('create ticket', () => {
         title: 'test',
       })
       .expect(400);
+  });
+
+  it('creates a ticket with valid inputs', async () => {
+    const tickets = await Ticket.find({});
+    expect(tickets.length).toEqual(0);
+
+    const payload = {
+      title: 'test',
+      price: 10,
+    };
+
+    await request(app)
+      .post('/api/tickets')
+      .set('Cookie', global.signin())
+      .send(payload)
+      .expect(201);
+
+    const ticket = await Ticket.find({});
+    expect(ticket.length).toEqual(1);
+    expect(ticket[0].title).toEqual(payload.title);
+    expect(ticket[0].price).toEqual(payload.price);
+    expect(ticket[0].userId).toBeDefined();
+    expect(ticket[0].id).toBeDefined();
   });
 });

@@ -1,8 +1,9 @@
 import express, { type Request, type Response } from 'express';
 import { requireAuth, validateRequest } from '@cwertlinks/common';
 import { body } from 'express-validator';
+import { Ticket } from '../models/ticket.model.js';
 
-const createTicketRouter = express.Router();
+export const createTicketRouter = express.Router();
 
 const ticketValidationSchema = [
   body('title').not().isEmpty().withMessage('Title is required'),
@@ -15,8 +16,16 @@ createTicketRouter.post(
   ticketValidationSchema,
   validateRequest,
   async (req: Request, res: Response) => {
-    res.sendStatus(200);
+    const { title, price } = req.body;
+
+    const ticket = new Ticket({
+      title,
+      price,
+      userId: req.currentUser!.id,
+    });
+
+    await ticket.save();
+
+    res.status(201).send(ticket);
   },
 );
-
-export { createTicketRouter };
