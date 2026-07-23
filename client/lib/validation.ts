@@ -15,3 +15,14 @@ export const signinSchema = yup.object({
 });
 
 export type AuthFormValues = yup.InferType<typeof signupSchema>;
+
+export const ticketSchema = yup.object({
+  title: yup.string().trim().required('Title is required'),
+  price: yup
+    .number()
+    .typeError('Price must be a number')
+    .required('Price is required')
+    .moreThan(0, 'Price must be greater than 0'),
+});
+
+export type TicketFormValues = yup.InferType<typeof ticketSchema>;
