@@ -4,6 +4,7 @@ import cookieSession from 'cookie-session';
 import { createTicketRouter } from './routes/createTicketRouter.js';
 import { singleTicketRouter } from './routes/singleTicketRouter.js';
 import { indexRouter } from './routes/indexRouter.js';
+import { updateRouter } from './routes/updateRouter.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(currentUser);
 app.use(createTicketRouter);
 app.use(singleTicketRouter);
 app.use(indexRouter);
+app.use(updateRouter);
 
 app.all('/{*splat}', () => {
   throw new NotFoundError();
