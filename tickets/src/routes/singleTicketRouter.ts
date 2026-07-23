@@ -2,10 +2,9 @@ import { Ticket } from './../models/ticket.model.js';
 import express from 'express';
 import { type Request, type Response } from 'express';
 import { NotFoundError } from '@cwertlinks/common';
-import { validateIdParam } from '../middlewares/validateIdParam.js';
 export const singleTicketRouter = express.Router();
 
-singleTicketRouter.get('/api/tickets/:id', validateIdParam, async (req: Request, res: Response) => {
+singleTicketRouter.get('/api/tickets/:id', async (req: Request, res: Response) => {
   const ticket = await Ticket.findById(req.params.id);
 
   if (!ticket) {

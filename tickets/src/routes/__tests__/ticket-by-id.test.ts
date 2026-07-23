@@ -1,9 +1,11 @@
 import request from 'supertest';
 import { app } from '../../app.js';
 import { ticketsEndpoint, ticketByIdEndpoint } from '../../tests/endpoints.js';
+import mongoose from 'mongoose';
 
 it('returns a 404 if the ticket is not found', async () => {
-  const response = await request(app).get(ticketByIdEndpoint('123')).send({});
+  const id = new mongoose.Types.ObjectId().toHexString();
+  const response = await request(app).get(ticketByIdEndpoint(id)).send({});
 
   expect(response.status).toBe(404);
 });
