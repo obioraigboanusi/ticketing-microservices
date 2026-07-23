@@ -25,8 +25,20 @@ export default function Header() {
         </Link>
 
         <div className="flex items-center gap-3 text-sm">
+          <Link
+            href="/tickets"
+            className="rounded-lg px-3 py-1.5 font-medium text-zinc-900 transition-colors hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800"
+          >
+            Tickets
+          </Link>
           {currentUser ? (
             <>
+              <Link
+                href="/tickets/new"
+                className="rounded-lg px-3 py-1.5 font-medium text-zinc-900 transition-colors hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800"
+              >
+                Sell
+              </Link>
               <span className="hidden text-zinc-500 sm:inline dark:text-zinc-400">
                 {currentUser.email}
               </span>
