@@ -5,4 +5,8 @@ export const API_ENDPOINTS = {
     signout: '/api/users/signout',
     currentUser: '/api/users/current-user',
   },
+  tickets: {
+    tickets: '/api/tickets',
+    ticketById: (id: string) => `/api/tickets/${id}`,
+  },
 } as const;
