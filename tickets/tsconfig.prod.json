@@ -1,4 +1,7 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["src/tests/**/*", "**/*.test.ts"]
+  "exclude": ["src/tests/**/*", "**/*.test.ts"],
+  "compilerOptions": {
+    "types": ["node"]
+  }
 }
