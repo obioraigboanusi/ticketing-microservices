@@ -1,6 +1,6 @@
 {
   "name": "@cwertlinks/common",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "common utilities for the ticketing project",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -13,7 +13,8 @@
   "scripts": {
     "clean": "del-cli build/**/*",
     "build": "npm run clean && tsc",
-    "pub": "npm run build && git add . && git commit -m \"$npm_config_message\" && npm version patch && npm publish"
+    "prepublishOnly": "npm run build",
+    "pub": "npm version patch -m \"chore(common): release %s\" && npm publish && git push --follow-tags"
   },
   "keywords": [],
   "author": "",
