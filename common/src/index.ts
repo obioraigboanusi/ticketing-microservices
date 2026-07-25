@@ -11,3 +11,4 @@ export * from './errors/not-found-error.js';
 export * from './errors/request-validation-error.js';
 
 export * from './events/index.js';
+export * from './nats/index.js';
