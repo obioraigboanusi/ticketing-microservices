@@ -3,7 +3,7 @@ console.log("Listener started");
 
 import nats from "node-nats-streaming";
 import { randomBytes } from "crypto";
-import { TicketCreatedListener } from "./events/fetures/ticket/listeners.js";
+import { TicketCreatedListener, TicketUpdatedListener } from "./events/fetures/ticket/listeners.js";
 
 const clientId = randomBytes(4).toString("hex");
 
@@ -22,6 +22,7 @@ stan.on("connect", () => {
   });
 
   new TicketCreatedListener(stan).listen();
+  new TicketUpdatedListener(stan).listen();
 });
 
 stan.on("error", (err) => {
