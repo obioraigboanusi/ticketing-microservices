@@ -3,6 +3,8 @@ import { Ticket } from '../models/ticket.model.js';
 import { NotAuthorizedError, requireAuth } from '@cwertlinks/common';
 import { ticketValidationSchema } from '../validators/ticket.validator.js';
 import { NotFoundError, validateRequest } from '@cwertlinks/common';
+import { TicketUpdatedPublisher } from '../events/ticket.event.js';
+import { natsWrapper } from '../nats.js';
 
 export const updateRouter = express.Router();
 
@@ -27,6 +29,14 @@ updateRouter.put(
       price: req.body.price,
     });
     await ticket.save();
+
+    await new TicketUpdatedPublisher(natsWrapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    });
+    console.log('Published edit');
 
     res.status(200).send(ticket);
   },
