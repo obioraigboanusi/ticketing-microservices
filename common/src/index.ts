@@ -9,3 +9,5 @@ export * from './errors/database-connection-error.js';
 export * from './errors/not-authorized-error.js';
 export * from './errors/not-found-error.js';
 export * from './errors/request-validation-error.js';
+
+export * from './events/index.js';
