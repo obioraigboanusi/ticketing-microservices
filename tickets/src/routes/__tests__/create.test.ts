@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app } from '../../app.js';
 import { Ticket } from '../../models/ticket.model.js';
 import { ticketsEndpoint } from '../../tests/endpoints.js';
+import { natsWrapper } from '../../nats.js';
 
 describe('create ticket', () => {
   it('has a route listening to /api/tickets for post requests', async () => {
@@ -84,5 +85,20 @@ describe('create ticket', () => {
     expect(ticket[0].price).toEqual(payload.price);
     expect(ticket[0].userId).toBeDefined();
     expect(ticket[0].id).toBeDefined();
+  });
+
+  it('should send NATS message', async () => {
+    const payload = {
+      title: 'test',
+      price: 10,
+    };
+
+    await request(app)
+      .post(ticketsEndpoint)
+      .set('Cookie', global.signin())
+      .send(payload)
+      .expect(201);
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
   });
 });

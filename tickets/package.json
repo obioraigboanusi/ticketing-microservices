@@ -49,11 +49,11 @@
     "ts-jest": "^29.4.11"
   },
   "jest": {
-    "preset": "ts-jest/presets/default-esm",
     "extensionsToTreatAsEsm": [
       ".ts"
     ],
     "testEnvironment": "node",
+    "preset": "ts-jest",
     "setupFilesAfterEnv": [
       "./src/tests/setup.ts"
     ],
