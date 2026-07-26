@@ -19,8 +19,12 @@ spec:
         image: obiorai/tickets
         imagePullPolicy: IfNotPresent
         env:
-        - name: NATS_URI
+        - name: NATS_URL
           value: http://nats-srv:4222
+        - name: NATS_CLIENT_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         - name: NATS_CLUSTER_ID
           value: "ticketing"
         - name: MONGO_URI

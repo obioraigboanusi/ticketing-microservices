@@ -1,17 +1,17 @@
 import mongoose from 'mongoose';
-import { randomBytes } from 'node:crypto';
 
 import { app } from './app.js';
 import { natsWrapper } from './nats.js';
 
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
-const NATS_URI = process.env.NATS_URI!;
+const NATS_URL = process.env.NATS_URL!;
 const NATS_CLUSTER_ID = process.env.NATS_CLUSTER_ID!;
+const NATS_CLIENT_ID = process.env.NATS_CLIENT_ID!;
 
 const start = async () => {
   try {
-    await natsWrapper.connect(NATS_CLUSTER_ID, randomBytes(4).toString('hex'), NATS_URI);
+    await natsWrapper.connect(NATS_CLUSTER_ID, NATS_CLIENT_ID, NATS_URL);
     console.log('NATS Connection success');
 
     natsWrapper.client.on('close', () => {
