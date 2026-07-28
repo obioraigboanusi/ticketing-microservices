@@ -17,7 +17,6 @@ app.use(
 
 app.use(currentUser);
 
-
 app.all('/{*splat}', () => {
   throw new NotFoundError();
 });
