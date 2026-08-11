@@ -3,6 +3,7 @@ import { app } from '../../app.js';
 import { Ticket } from '../../models/ticket.model.js';
 import mongoose from 'mongoose';
 import { OrderStatus } from '../../models/order.model.js';
+import { natsWrapper } from '../../nats.js';
 
 describe('Delete order route', () => {
   it('Returns 404 if the order does not exist', async () => {
@@ -59,5 +60,25 @@ describe('Delete order route', () => {
       .expect(200);
 
     expect(cancelledOrder.status).toEqual(OrderStatus.Cancelled);
+  });
+
+  it('emits an order cancelled event', async () => {
+    const ticket = Ticket.build({
+      title: 'concert',
+      price: 20,
+    });
+    await ticket.save();
+
+    const user = global.signin();
+
+    const { body: order } = await request(app)
+      .post('/api/orders')
+      .set('Cookie', user)
+      .send({ ticketId: ticket.id })
+      .expect(201);
+
+    await request(app).delete(`/api/orders/${order.id}`).set('Cookie', user).send().expect(204);
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
   });
 });
