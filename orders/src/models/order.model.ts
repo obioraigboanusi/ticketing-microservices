@@ -5,6 +5,7 @@ import { OrderStatus } from '@cwertlinks/common';
 export { OrderStatus };
 
 export interface OrderDoc extends Document {
+  id: string;
   userId: string;
   status: string;
   expiresAt: Date;
