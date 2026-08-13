@@ -1,12 +1,24 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface ITicket extends Document {
+interface TicketAttrs {
   title: string;
   price: number;
   userId: string;
 }
 
-const ticketSchema = new Schema<ITicket>(
+export interface TicketDoc extends Document {
+  id: string;
+  title: string;
+  price: number;
+  userId: string;
+  version: number;
+}
+
+interface TicketModel extends mongoose.Model<TicketDoc> {
+  build(attrs: TicketAttrs): TicketDoc;
+}
+
+const ticketSchema = new Schema<TicketDoc>(
   {
     title: {
       type: String,
@@ -25,13 +37,13 @@ const ticketSchema = new Schema<ITicket>(
   },
   {
     timestamps: true,
+    versionKey: 'version',
+    optimisticConcurrency: true,
     toJSON: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transform(_doc: Document, ret: any): any {
         ret.id = ret._id.toString();
-
         delete ret._id;
-        delete ret.__v;
 
         return ret;
       },
@@ -39,4 +51,8 @@ const ticketSchema = new Schema<ITicket>(
   },
 );
 
-export const Ticket = mongoose.model<ITicket>('Ticket', ticketSchema);
+ticketSchema.statics.build = (attrs: TicketAttrs): TicketDoc => {
+  return new Ticket(attrs);
+};
+
+export const Ticket = mongoose.model<TicketDoc, TicketModel>('Ticket', ticketSchema);
