@@ -1,10 +1,12 @@
 import { Ticket } from '../../models/ticket.model.js';
 import { app } from '../../app.js';
 import request from 'supertest';
+import mongoose from 'mongoose';
 
 describe('show order route', () => {
   it('returns an error if user does not own the order', async () => {
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       title: 'concert',
       price: 20,
     });
@@ -24,6 +26,7 @@ describe('show order route', () => {
   });
   it('fetches the order by id', async () => {
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       title: 'concert',
       price: 20,
     });

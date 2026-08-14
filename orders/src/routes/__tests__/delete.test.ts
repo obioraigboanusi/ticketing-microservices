@@ -1,7 +1,7 @@
 import request from 'supertest';
+import mongoose from 'mongoose';
 import { app } from '../../app.js';
 import { Ticket } from '../../models/ticket.model.js';
-import mongoose from 'mongoose';
 import { OrderStatus } from '../../models/order.model.js';
 import { natsWrapper } from '../../nats.js';
 
@@ -18,6 +18,7 @@ describe('Delete order route', () => {
 
   it('Should return 401 if user does not own the order', async () => {
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       title: 'concert',
       price: 20,
     });
@@ -38,6 +39,7 @@ describe('Delete order route', () => {
 
   it('marks the order as cancelled', async () => {
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       title: 'concert',
       price: 20,
     });
@@ -64,6 +66,7 @@ describe('Delete order route', () => {
 
   it('emits an order cancelled event', async () => {
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       title: 'concert',
       price: 20,
     });
