@@ -4,17 +4,18 @@ import { OrderStatus } from '@cwertlinks/common';
 
 export { OrderStatus };
 
-export interface OrderDoc extends Document {
-  id: string;
+interface OrderAttrs {
   userId: string;
-  status: string;
+  status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDoc;
 }
 
-interface OrderAttrs {
+export interface OrderDoc extends Document {
+  id: string;
   userId: string;
-  status: OrderStatus;
+  status: string;
+  version: number;
   expiresAt: Date;
   ticket: TicketDoc;
 }
@@ -48,13 +49,13 @@ const orderSchema = new Schema<OrderDoc>(
   },
   {
     timestamps: true,
+    versionKey: 'version',
+    optimisticConcurrency: true,
     toJSON: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transform(_doc: Document, ret: any): any {
         ret.id = ret._id.toString();
         delete ret._id;
-        delete ret.__v;
-
         return ret;
       },
     },
