@@ -35,6 +35,7 @@ updateRouter.put(
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version,
     });
     console.log('Published edit');
 
