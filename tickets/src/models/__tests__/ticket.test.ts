@@ -10,8 +10,6 @@ describe('Ticket Model', () => {
 
     await ticket.save();
 
-    expect(ticket.version).toEqual(0);
-
     const firstInstance = await Ticket.findById(ticket.id);
     const secondInstance = await Ticket.findById(ticket.id);
 
@@ -20,8 +18,25 @@ describe('Ticket Model', () => {
 
     await firstInstance!.save();
 
-    expect(firstInstance!.version).toEqual(1);
-
     await expect(secondInstance!.save()).rejects.toThrow();
+  });
+
+  it('increments the version number on multiple saves', async () => {
+    const ticket = Ticket.build({
+      title: 'concert',
+      price: 75,
+      userId: 'cvxdsfds',
+    });
+
+    await ticket.save();
+    expect(ticket.version).toEqual(0);
+
+    ticket.set('price', 80);
+    await ticket.save();
+    expect(ticket.version).toEqual(1);
+
+    ticket.set('title', 'updated concert');
+    await ticket.save();
+    expect(ticket.version).toEqual(2);
   });
 });
