@@ -1,4 +1,4 @@
-import { Subjects, type Event } from '../../utils.js';
+import { Subjects, type Event } from './utils.js';
 
 export enum OrderStatus {
   // When the order has been created, but the ticket it is trying to order has not been reserved
@@ -15,6 +15,7 @@ export interface OrderCreatedEvent extends Event {
   subject: Subjects.OrderCreated;
   data: {
     id: string;
+    version: number;
     status: OrderStatus;
     userId: string;
     expiresAt: string;
@@ -29,6 +30,7 @@ export interface OrderCancelledEvent extends Event {
   subject: Subjects.OrderCancelled;
   data: {
     id: string;
+    version: number;
     ticket: {
       id: string;
     };
