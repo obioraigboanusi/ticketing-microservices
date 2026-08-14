@@ -9,6 +9,7 @@ interface TicketAttrs {
 
 export interface TicketDoc extends Document {
   id: string;
+  version: number;
   title: string;
   price: number;
   isReserved(): Promise<boolean>;
@@ -16,6 +17,7 @@ export interface TicketDoc extends Document {
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
+  findByEvent(event: { id: string; version: number }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new Schema<TicketDoc>(
@@ -33,14 +35,13 @@ const ticketSchema = new Schema<TicketDoc>(
   },
   {
     timestamps: true,
+    versionKey: 'version',
+    optimisticConcurrency: true,
     toJSON: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transform(_doc: Document, ret: any): any {
         ret.id = ret._id.toString();
-
         delete ret._id;
-        delete ret.__v;
-
         return ret;
       },
     },
@@ -52,6 +53,13 @@ ticketSchema.statics.build = (attrs: TicketAttrs) => {
     _id: attrs.id,
     title: attrs.title,
     price: attrs.price,
+  });
+};
+
+ticketSchema.statics.findByEvent = async (event: { id: string; version: number }) => {
+  return Ticket.findOne({
+    _id: event.id,
+    version: event.version - 1, // previous version of the ticket should be one less than the current version
   });
 };
 
