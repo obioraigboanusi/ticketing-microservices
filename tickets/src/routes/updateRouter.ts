@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from 'express';
 import { Ticket } from '../models/ticket.model.js';
-import { NotAuthorizedError, requireAuth } from '@cwertlinks/common';
+import { BadRequestError, NotAuthorizedError, requireAuth } from '@cwertlinks/common';
 import { ticketValidationSchema } from '../validators/ticket.validator.js';
 import { NotFoundError, validateRequest } from '@cwertlinks/common';
 import { TicketUpdatedPublisher } from '../events/ticket.event.js';
@@ -24,6 +24,10 @@ updateRouter.put(
       throw new NotAuthorizedError();
     }
 
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved ticket');
+    }
+
     ticket.set({
       title: req.body.title,
       price: req.body.price,
@@ -37,7 +41,6 @@ updateRouter.put(
       userId: ticket.userId,
       version: ticket.version,
     });
-    console.log('Published edit');
 
     res.status(200).send(ticket);
   },
