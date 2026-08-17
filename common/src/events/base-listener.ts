@@ -2,7 +2,7 @@ import type { Message, Stan } from "node-nats-streaming";
 import type { Event } from "./utils.js";
 
 export abstract class BaseListener<T extends Event> {
-  private client: Stan;
+  protected client: Stan;
   abstract subject: T["subject"];
   abstract queryGroupName: string;
   abstract onMessage(data: T["data"], msg: Message): void;
