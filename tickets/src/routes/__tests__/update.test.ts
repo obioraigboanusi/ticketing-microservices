@@ -3,6 +3,7 @@ import { app } from '../../app.js';
 import { ticketByIdEndpoint, ticketsEndpoint } from '../../tests/endpoints.js';
 import mongoose from 'mongoose';
 import { natsWrapper } from '../../nats.js';
+import { Ticket } from '../../models/ticket.model.js';
 
 describe('Update Ticket', () => {
   it('returns 401 if the user is not authenticated', async () => {
@@ -121,5 +122,33 @@ describe('Update Ticket', () => {
       .expect(200);
 
     expect(natsWrapper.client.publish).toHaveBeenCalled();
+  });
+
+  it('Should reject updates if the ticket is reserved', async () => {
+    const cookie = global.signin();
+
+    const response = await request(app)
+      .post(ticketsEndpoint)
+      .set('Cookie', cookie)
+      .send({
+        title: 'test',
+        price: 10,
+      })
+      .expect(201);
+
+    const ticket = await Ticket.findById(response.body.id);
+    ticket!.set({ orderId: new mongoose.Types.ObjectId().toHexString() });
+    await ticket!.save();
+
+    const payload = {
+      title: 'test2',
+      price: 20,
+    };
+
+    await request(app)
+      .put(ticketByIdEndpoint(response.body.id))
+      .set('Cookie', cookie)
+      .send(payload)
+      .expect(400);
   });
 });
