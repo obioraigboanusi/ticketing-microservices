@@ -3,9 +3,9 @@ import type { Event } from "./utils.js";
 
 export abstract class BaseListener<T extends Event> {
   protected client: Stan;
-  abstract subject: T["subject"];
-  abstract queryGroupName: string;
-  abstract onMessage(data: T["data"], msg: Message): void;
+  abstract subject: T['subject'];
+  abstract queueGroupName: string;
+  abstract onMessage(data: T['data'], msg: Message): void;
   protected ackWait = 5000;
 
   constructor(client: Stan) {
@@ -16,7 +16,7 @@ export abstract class BaseListener<T extends Event> {
     return this.client
       .subscriptionOptions()
       .setDeliverAllAvailable()
-      .setDurableName(this.queryGroupName)
+      .setDurableName(this.queueGroupName)
       .setManualAckMode(true)
       .setAckWait(this.ackWait);
   }
@@ -24,17 +24,14 @@ export abstract class BaseListener<T extends Event> {
   listen() {
     const subscription = this.client.subscribe(
       this.subject,
-      this.queryGroupName,
+      this.queueGroupName,
       this.subscriptionOptions(),
     );
 
-    subscription.on("message", (msg: Message) => {
+    subscription.on('message', (msg: Message) => {
       const parsedData = this.parseMessage(msg);
 
-      console.log(
-        `Message ${this.subject}/ ${this.queryGroupName}: `,
-        parsedData,
-      );
+      console.log(`Message ${this.subject}/ ${this.queueGroupName}: `, parsedData);
 
       this.onMessage(parsedData, msg);
     });
@@ -42,8 +39,6 @@ export abstract class BaseListener<T extends Event> {
 
   parseMessage(msg: Message) {
     const data = msg.getData();
-    return typeof data === "string"
-      ? JSON.parse(data)
-      : JSON.parse(data.toString("utf-8"));
+    return typeof data === 'string' ? JSON.parse(data) : JSON.parse(data.toString('utf-8'));
   }
 }
