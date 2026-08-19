@@ -10,6 +10,8 @@ const NATS_CLUSTER_ID = process.env.NATS_CLUSTER_ID!;
 const NATS_CLIENT_ID = process.env.NATS_CLIENT_ID!;
 
 const start = async () => {
+  console.log('Starting...');
+
   try {
     await natsWrapper.connect(NATS_CLUSTER_ID, NATS_CLIENT_ID, NATS_URL);
     console.log('NATS Connection success');
@@ -22,7 +24,7 @@ const start = async () => {
 
     process.on('SIGINT', cleanup);
     process.on('SIGBREAK', cleanup); // Windows
-    
+
     process.on('SIGTERM', cleanup); // Linux/macOS; harmless on Windows
 
     await mongoose.connect(MONGO_URI!);
