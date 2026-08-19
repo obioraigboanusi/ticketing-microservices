@@ -36,7 +36,6 @@ const ticketSchema = new Schema<TicketDoc>(
   {
     timestamps: true,
     versionKey: 'version',
-    optimisticConcurrency: true,
     toJSON: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transform(_doc: Document, ret: any): any {

@@ -4,6 +4,7 @@ import { app } from './app.js';
 import { natsWrapper } from './nats.js';
 import { TicketUpdatedListener } from './events/listeners/ticket-updated-listener.js';
 import { TicketCreatedListener } from './events/listeners/ticket-created-listener.js';
+import { ExpirationCompleteListener } from './events/listeners/expiration-complete-listener.js';
 
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
@@ -14,7 +15,6 @@ const NATS_CLIENT_ID = process.env.NATS_CLIENT_ID!;
 const start = async () => {
   try {
     await natsWrapper.connect(NATS_CLUSTER_ID, NATS_CLIENT_ID, NATS_URL);
-    console.log('NATS Connection success');
 
     natsWrapper.client.on('close', () => {
       console.log('NATS connection closed!');
@@ -28,6 +28,7 @@ const start = async () => {
 
     new TicketCreatedListener(natsWrapper.client).listen();
     new TicketUpdatedListener(natsWrapper.client).listen();
+    new ExpirationCompleteListener(natsWrapper.client).listen();
 
     await mongoose.connect(MONGO_URI!);
     console.log('Connected to MongoDB');
