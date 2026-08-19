@@ -15,7 +15,8 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll",
+    "test:ci": "node --experimental-vm-modules node_modules/jest/bin/jest.js --ci"
   },
   "dependencies": {
     "@cwertlinks/common": "^1.0.15",
