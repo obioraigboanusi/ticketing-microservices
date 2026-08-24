@@ -1,5 +1,3 @@
-import type { Message } from "node-nats-streaming";
-import { BaseListener } from "./base-listener.js";
 import { Subjects, type Event } from "./utils.js";
 
 interface TicketEvent extends Event {
