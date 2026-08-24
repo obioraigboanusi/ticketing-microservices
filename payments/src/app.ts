@@ -1,6 +1,7 @@
 import express from 'express';
 import { currentUser, errorHandler, NotFoundError } from '@cwertlinks/common';
 import cookieSession from 'cookie-session';
+import { paystackWebhookRouter } from './routes/webhook.js';
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.use(
 );
 
 app.use(currentUser);
+
+app.use(paystackWebhookRouter);
 
 app.all('/{*splat}', () => {
   throw new NotFoundError();
