@@ -19,12 +19,13 @@
     "test:ci": "node --experimental-vm-modules node_modules/jest/bin/jest.js --ci --passWithNoTests"
   },
   "dependencies": {
-    "@cwertlinks/common": "^1.0.14",
+    "@cwertlinks/common": "^2.0.6",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-session": "^2.0.49",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.1.1",
+    "axios": "^1.19.0",
     "bcrypt": "^6.0.0",
     "cookie-session": "^2.1.1",
     "express": "^5.2.1",
