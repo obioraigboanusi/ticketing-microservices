@@ -8,7 +8,7 @@ export default async function Home() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-zinc-50 px-4 font-sans dark:bg-black">
       <h1 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-50">
-        Welcome to the ticketing app!
+        Welcome to the ticketing app!!
       </h1>
 
       {currentUser ? (
