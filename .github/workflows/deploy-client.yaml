@@ -1,0 +1,22 @@
+name: deploy-client
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'client/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - run: cd client && docker build -t obiorai/client .
+      - run: docker push obiorai/client
+      
